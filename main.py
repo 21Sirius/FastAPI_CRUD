@@ -1,9 +1,13 @@
-
-from fastapi import FastAPI,
+from fastapi import FastAPI
 from pydantic import EmailStr, BaseModel
 import uvicorn
 
+from items_views import router as items_router
+from users.views import router as users_router
+
 app = FastAPI()
+app.include_router(items_router)
+app.include_router(users_router)
 
 
 class CreateUser(BaseModel):
@@ -23,14 +27,6 @@ def hello(name: str = "World"):
     return {"message": f"Hello {name}!"}
 
 
-@app.post("/users/")
-def create_user(user: CreateUser):
-    return {
-        "message": "success",
-        "email": user.email,
-    }
-
-
 @app.get("/calc/add/")
 def add(a: int, b: int):
     return {
@@ -38,9 +34,6 @@ def add(a: int, b: int):
         "b": b,
         "result": a + b,
     }
-
-
-
 
 
 if __name__ == '__main__':
